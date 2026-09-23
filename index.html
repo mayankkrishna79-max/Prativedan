@@ -8,9 +8,10 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
+    /* Page print setup - margin 0 karne se browser ke default headers/footers band ho jaate hain */
     @page {
       size: A4 portrait;
-      margin: 10mm 15mm;
+      margin: 0;
     }
 
     * {
@@ -257,12 +258,23 @@
       padding-right: 15px;
     }
 
+    /* Print styles */
     @media print {
+      html, body {
+        width: 100%;
+        height: 100%;
+        margin: 0 !important;
+        padding: 12mm 15mm !important; /* Margin page se hatakar padding me diya gaya hai */
+        background: #fff;
+      }
+
       #waOverlay, .controls {
         display: none !important;
       }
-      body {
-        padding: 0;
+
+      .fill-line:empty::before,
+      .editable-field:empty::before {
+        content: "\00a0";
       }
     }
   </style>
@@ -275,7 +287,6 @@
     <h2>सूचना / आवश्यक सूचना</h2>
     <p>स्थानांतरण प्रतिवेदन प्रपत्र भरने और प्रिंट करने के लिए कृपया हमारे <strong>WhatsApp Channel</strong> से जुड़ें।</p>
     
-    <!-- WhatsApp Channel Link -->
     <a href="https://whatsapp.com/channel/0029VaIhMoY35fM4YK5xrz3P" target="_blank" class="wa-btn" id="joinBtn" onclick="enableUnlock()">
       📲 WhatsApp Channel Join करें
     </a>
@@ -297,7 +308,6 @@
   <div class="header-title">स्थानांतरण प्रतिवेदन&mdash;2026</div>
   <div class="header-subtitle">(जिस विद्यालय में शिक्षक योगदान किए है, वहाँ के प्रधान शिक्षक / प्रधानाध्यापक द्वारा समर्पित किया जाना है)</div>
 
-  <!-- नवपदस्थापित प्रखंड के तुरंत बाद से टाइप होगा -->
   <div class="top-block">
     <span>नवपदस्थापित प्रखंड&mdash;</span><span class="editable-field" contenteditable="true"></span>
   </div>
