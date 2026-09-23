@@ -20,7 +20,7 @@
     body {
       font-family: 'Noto Sans Devanagari', 'Arial Unicode MS', Arial, sans-serif;
       font-size: 13px;
-      line-height: 1.45;
+      line-height: 1.42;
       color: #000;
       background-color: #fff;
       margin: 0;
@@ -131,26 +131,24 @@
       text-align: center;
       font-size: 21px;
       font-weight: 700;
-      margin-bottom: 3px;
+      margin-bottom: 2px;
     }
 
     .header-subtitle {
       text-align: center;
       font-size: 12px;
-      margin-bottom: 8px;
+      margin-bottom: 6px;
     }
 
     .top-block {
       text-align: right;
       margin-bottom: 8px;
-      display: flex;
-      justify-content: flex-end;
-      align-items: baseline;
+      white-space: nowrap;
     }
 
     .editable-field {
       display: inline-block;
-      min-width: 180px;
+      min-width: 170px;
       border-bottom: 1px dotted #000;
       outline: none;
       padding: 0 4px;
@@ -175,14 +173,14 @@
     .field-row {
       display: flex;
       align-items: baseline;
-      margin-bottom: 6px;
+      margin-bottom: 5px;
     }
 
     .col-num {
-      width: 28px;
+      width: 26px;
       flex-shrink: 0;
       text-align: right;
-      padding-right: 6px;
+      padding-right: 5px;
     }
 
     .col-label {
@@ -192,12 +190,12 @@
 
     .sub-note {
       font-size: 11px;
-      margin-left: 35px;
+      margin-left: 31px;
       margin-top: -3px;
       margin-bottom: 5px;
     }
 
-    /* Mobile Chrome Date Inputs & Selects */
+    /* Mobile Inputs */
     input[type="date"],
     select {
       font-family: inherit;
@@ -219,10 +217,12 @@
       margin-bottom: 4px;
     }
 
+    /* Uniform Tables */
     table {
       width: 100%;
+      table-layout: fixed; /* Column width fix rakhta hai */
       border-collapse: collapse;
-      margin-bottom: 4px;
+      margin-bottom: 6px;
     }
 
     th, td {
@@ -230,6 +230,8 @@
       text-align: center;
       padding: 4px 2px;
       font-size: 12px;
+      word-wrap: break-word;
+      overflow: hidden;
     }
 
     th {
@@ -249,45 +251,49 @@
       width: 100%;
       border-bottom: none;
       text-align: center;
-      padding: 2px 0;
+      padding: 1px 0;
     }
 
     .note-section {
       font-weight: 700;
-      font-size: 12px;
-      margin-top: 10px;
+      font-size: 11.5px;
+      margin-top: 9px;
       line-height: 1.4;
     }
 
     .declaration {
-      margin-top: 12px;
+      margin-top: 10px;
       text-align: justify;
       line-height: 1.45;
+      font-size: 12.5px;
     }
 
     .dispatch-info {
       display: flex;
       justify-content: flex-end;
       gap: 30px;
-      margin-top: 16px;
+      margin-top: 15px;
       font-size: 13px;
     }
 
     .signature-area {
-      margin-top: 35px;
+      margin-top: 30px;
       text-align: right;
       font-weight: 700;
       line-height: 1.4;
       padding-right: 15px;
     }
 
+    .print-val {
+      display: none;
+    }
+
     /* Print settings */
     @media print {
       html, body {
         width: 100%;
-        height: 100%;
         margin: 0 !important;
-        padding: 12mm 15mm !important;
+        padding: 10mm 14mm !important;
         background: #fff;
       }
 
@@ -295,26 +301,28 @@
         display: none !important;
       }
 
-      select {
-        -webkit-appearance: none;
-        -moz-appearance: none;
-        appearance: none;
+      /* Date and Select tick box removal on print */
+      input[type="date"], select {
+        display: none !important;
       }
 
-      input[type="date"]::-webkit-calendar-picker-indicator {
-        display: none;
+      .print-val {
+        display: inline-block !important;
       }
 
       .fill-line:empty::before,
       .editable-field:empty::before {
         content: "\00a0";
       }
+
+      table {
+        table-layout: fixed !important;
+      }
     }
   </style>
 </head>
 <body>
 
-<!-- WhatsApp Join Lock Popup -->
 <div id="waOverlay">
   <div class="wa-card">
     <h2>सूचना / आवश्यक सूचना</h2>
@@ -331,17 +339,17 @@
 </div>
 
 <div class="controls">
-  <button class="btn btn-secondary" onclick="addRow('table11', 8)">+ पूर्व पदस्थापन पंक्ति जोड़ें</button>
-  <button class="btn btn-secondary" onclick="addRow('table12', 7)">+ पदस्थापन विद्यालय पंक्ति जोड़ें</button>
+  <button class="btn btn-secondary" onclick="addRow('table11')">+ पूर्व पदस्थापन पंक्ति जोड़ें</button>
+  <button class="btn btn-secondary" onclick="addRow('table12')">+ पदस्थापन विद्यालय पंक्ति जोड़ें</button>
   <button class="btn btn-danger" onclick="clearForm()">🗑️ फॉर्म खाली करें</button>
-  <button class="btn" onclick="window.print()">🖨️ फॉर्म प्रिंट / PDF सेव करें</button>
+  <button class="btn" onclick="prepareAndPrint()">🖨️ फॉर्म प्रिंट / PDF सेव करें</button>
 </div>
 
 <div class="form-container">
   <div class="header-title">स्थानांतरण प्रतिवेदन&mdash;2026</div>
   <div class="header-subtitle">(जिस विद्यालय में शिक्षक योगदान किए है, वहाँ के प्रधान शिक्षक / प्रधानाध्यापक द्वारा समर्पित किया जाना है)</div>
 
-  <!-- नवपदस्थापित प्रखंड -->
+  <!-- नवपदस्थापित प्रखंड Header Right -->
   <div class="top-block">
     <span>नवपदस्थापित प्रखंड&mdash;</span><span class="editable-field" contenteditable="true"></span>
   </div>
@@ -362,7 +370,7 @@
   <div class="field-row">
     <div class="col-num">3.</div>
     <div class="col-label">शिक्षक का कोटि :&mdash;</div>
-    <select class="fill-line">
+    <select class="fill-line select-input">
       <option value="">-- चयन करें --</option>
       <option value="नियमित कोटि के शिक्षक">नियमित कोटि के शिक्षक</option>
       <option value="विशिष्ट शिक्षक (सक्षमता-1)">विशिष्ट शिक्षक (सक्षमता-1)</option>
@@ -373,6 +381,7 @@
       <option value="विद्यालय अध्यापक (TRE-2)">विद्यालय अध्यापक (TRE-2)</option>
       <option value="विद्यालय अध्यापक (TRE-3)">विद्यालय अध्यापक (TRE-3)</option>
     </select>
+    <span class="print-val fill-line"></span>
   </div>
   <div class="sub-note">(नियमित कोटि के शिक्षक / विशिष्ट शिक्षक (सक्षमता&mdash;1,2,3,4) / विद्यालय अध्यापक&mdash;(TRE&mdash;1,2,3)</div>
 
@@ -380,22 +389,24 @@
   <div class="field-row">
     <div class="col-num">4.</div>
     <div class="col-label">स्थानांतरण का प्रकार :&mdash;</div>
-    <select class="fill-line">
+    <select class="fill-line select-input">
       <option value="">-- चयन करें --</option>
       <option value="समायोजन">समायोजन</option>
       <option value="समानुपातिकरण">समानुपातिकरण</option>
       <option value="पारस्परिक">पारस्परिक</option>
     </select>
+    <span class="print-val fill-line"></span>
   </div>
   <div class="sub-note">(समायोजन / समानुपातिकरण एवं पारस्परिक)</div>
 
-  <!-- 5. पत्रांक एवं दिनांक (Calendar) -->
+  <!-- 5. पत्रांक एवं दिनांक -->
   <div class="field-row">
     <div class="col-num">5.</div>
     <div class="col-label">स्थानांतरण / पदस्थापन आदेश का पत्रांक :&mdash;</div>
     <span class="editable-field" style="min-width: 140px; margin-right: 15px;" contenteditable="true"></span>
     <div class="col-label">दिनांक :&mdash;</div>
-    <input type="date" class="fill-line">
+    <input type="date" class="fill-line date-input">
+    <span class="print-val fill-line"></span>
   </div>
 
   <div class="field-row">
@@ -416,36 +427,48 @@
     <div class="fill-line" contenteditable="true"></div>
   </div>
 
-  <!-- 9. प्रथम योगदान तिथि (Calendar) -->
+  <!-- 9. प्रथम योगदान तिथि -->
   <div class="field-row">
     <div class="col-num">9.</div>
     <div class="col-label">क्र.सं.&mdash;3 में अंकित उपरोक्त शिक्षक के प्रथम योगदान तिथि :&mdash;</div>
-    <input type="date" class="fill-line">
+    <input type="date" class="fill-line date-input">
+    <span class="print-val fill-line"></span>
   </div>
 
-  <!-- 10. विशिष्ट शिक्षक प्रथम योगदान तिथि (Calendar) -->
+  <!-- 10. विशिष्ट शिक्षक प्रथम योगदान तिथि -->
   <div class="field-row">
     <div class="col-num">10.</div>
     <div class="col-label">विशिष्ट शिक्षक का स्थानीय निकाय के पद पर प्रथम योगदान तिथि :&mdash;</div>
-    <input type="date" class="fill-line">
+    <input type="date" class="fill-line date-input">
+    <span class="print-val fill-line"></span>
   </div>
   <div class="sub-note">(अगर लागू हो तो)</div>
 
-  <!-- Table 11 -->
+  <!-- Table 11: Total width 100% (6% + 14% + 13% + 15% + 24% + 10% + 10% + 8% = 100%) -->
   <div class="table-section-title">
     <strong>11.</strong> &nbsp;पूर्व पदस्थापन विद्यालय का विवरण :&mdash;
   </div>
   <table id="table11">
+    <colgroup>
+      <col style="width: 6%;">
+      <col style="width: 14%;">
+      <col style="width: 13%;">
+      <col style="width: 15%;">
+      <col style="width: 24%;">
+      <col style="width: 10%;">
+      <col style="width: 10%;">
+      <col style="width: 8%;">
+    </colgroup>
     <thead>
       <tr>
-        <th style="width: 7%;">क्र.सं.</th>
-        <th style="width: 13%;">जिला</th>
-        <th style="width: 13%;">प्रखंड</th>
-        <th style="width: 14%;">यू&mdash;डायस कोड</th>
-        <th style="width: 25%;">विद्यालय का नाम</th>
-        <th style="width: 10%;">कब से</th>
-        <th style="width: 10%;">कब तक</th>
-        <th style="width: 8%;">अभ्युक्ति</th>
+        <th>क्र.सं.</th>
+        <th>जिला</th>
+        <th>प्रखंड</th>
+        <th>यू&mdash;डायस कोड</th>
+        <th>विद्यालय का नाम</th>
+        <th>कब से</th>
+        <th>कब तक</th>
+        <th>अभ्युक्ति</th>
       </tr>
     </thead>
     <tbody>
@@ -455,27 +478,42 @@
         <td contenteditable="true"></td>
         <td contenteditable="true"></td>
         <td contenteditable="true"></td>
-        <td><input type="date"></td>
-        <td><input type="date"></td>
+        <td>
+          <input type="date" class="date-input">
+          <span class="print-val"></span>
+        </td>
+        <td>
+          <input type="date" class="date-input">
+          <span class="print-val"></span>
+        </td>
         <td contenteditable="true"></td>
       </tr>
     </tbody>
   </table>
 
-  <!-- Table 12 -->
+  <!-- Table 12: Pehle 5 columns bilkul Table 11 ke saman hain (6% + 14% + 13% + 15% + 24% + 20% + 8% = 100%) -->
   <div class="table-section-title">
     <strong>12.</strong> &nbsp;<strong>पदस्थापन विद्यालय जिसमें स्थानांतरण के उपरांत योगदान किया है, का विवरण :&mdash;</strong>
   </div>
   <table id="table12">
+    <colgroup>
+      <col style="width: 6%;">
+      <col style="width: 14%;">
+      <col style="width: 13%;">
+      <col style="width: 15%;">
+      <col style="width: 24%;">
+      <col style="width: 20%;">
+      <col style="width: 8%;">
+    </colgroup>
     <thead>
       <tr>
-        <th style="width: 7%;">क्र.सं.</th>
-        <th style="width: 14%;">जिला</th>
-        <th style="width: 13%;">प्रखंड</th>
-        <th style="width: 15%;">यू&mdash;डायस कोड</th>
-        <th style="width: 25%;">विद्यालय का नाम</th>
-        <th style="width: 16%;">योगदान तिथि</th>
-        <th style="width: 10%;">अभ्युक्ति</th>
+        <th>क्र.सं.</th>
+        <th>जिला</th>
+        <th>प्रखंड</th>
+        <th>यू&mdash;डायस कोड</th>
+        <th>विद्यालय का नाम</th>
+        <th>योगदान तिथि</th>
+        <th>अभ्युक्ति</th>
       </tr>
     </thead>
     <tbody>
@@ -485,7 +523,10 @@
         <td contenteditable="true"></td>
         <td contenteditable="true"></td>
         <td contenteditable="true"></td>
-        <td><input type="date"></td>
+        <td>
+          <input type="date" class="date-input">
+          <span class="print-val"></span>
+        </td>
         <td contenteditable="true"></td>
       </tr>
     </tbody>
@@ -495,7 +536,7 @@
   <div class="field-row">
     <div class="col-num">13.</div>
     <div class="col-label">अंतिम वेतन किस माह तक प्राप्त है :&mdash;</div>
-    <select class="fill-line">
+    <select class="fill-line select-input">
       <option value="">-- माह चुनें --</option>
       <option value="जनवरी 2026">जनवरी 2026</option>
       <option value="फरवरी 2026">फरवरी 2026</option>
@@ -510,6 +551,7 @@
       <option value="नवंबर 2026">नवंबर 2026</option>
       <option value="दिसंबर 2026">दिसंबर 2026</option>
     </select>
+    <span class="print-val fill-line"></span>
   </div>
 
   <div class="field-row">
@@ -529,7 +571,11 @@
   <!-- Dispatch Info -->
   <div class="dispatch-info">
     <div>पत्रांक <span class="editable-field" style="width: 120px;" contenteditable="true"></span></div>
-    <div>दिनांक <input type="date" style="width: 130px;"></div>
+    <div>
+      दिनांक 
+      <input type="date" class="date-input" style="width: 130px;">
+      <span class="print-val" style="min-width: 120px; border-bottom: 1px dotted #000; text-align: center;"></span>
+    </div>
   </div>
 
   <div class="signature-area">
@@ -539,13 +585,10 @@
 </div>
 
 <script>
-  // Page load hote hi check karega ki kya user pehle hi join kar chuka hai
   document.addEventListener("DOMContentLoaded", function() {
     if (localStorage.getItem("wa_channel_joined") === "true") {
       var overlay = document.getElementById("waOverlay");
-      if (overlay) {
-        overlay.style.display = "none";
-      }
+      if (overlay) overlay.style.display = "none";
     }
   });
 
@@ -559,52 +602,104 @@
   }
 
   function accessForm() {
-    // LocalStorage me save kar diya - ab is device par dobara popup nahi aayega
     localStorage.setItem("wa_channel_joined", "true");
     document.getElementById('waOverlay').style.display = 'none';
   }
 
-  function addRow(tableId, cols) {
+  // Convert Date & Select values to Clean text before printing
+  function prepareAndPrint() {
+    // 1. Convert Dates (YYYY-MM-DD -> DD/MM/YYYY)
+    var dateInputs = document.querySelectorAll('.date-input');
+    dateInputs.forEach(function(input) {
+      var printSpan = input.nextElementSibling;
+      if (printSpan && printSpan.classList.contains('print-val')) {
+        if (input.value) {
+          var parts = input.value.split('-');
+          printSpan.innerText = parts[2] + '/' + parts[1] + '/' + parts[0];
+        } else {
+          printSpan.innerText = '';
+        }
+      }
+    });
+
+    // 2. Convert Selects
+    var selectInputs = document.querySelectorAll('.select-input');
+    selectInputs.forEach(function(select) {
+      var printSpan = select.nextElementSibling;
+      if (printSpan && printSpan.classList.contains('print-val')) {
+        printSpan.innerText = select.value || '';
+      }
+    });
+
+    // Print
+    window.print();
+  }
+
+  function addRow(tableId) {
     var tbody = document.getElementById(tableId).getElementsByTagName('tbody')[0];
     var rowCount = tbody.rows.length + 1;
     var row = tbody.insertRow();
     
-    var cell1 = row.insertCell(0);
-    cell1.contentEditable = "true";
-    cell1.innerText = rowCount + ".";
-
-    for (var i = 1; i < cols; i++) {
-      var cell = row.insertCell(i);
-      if ((tableId === 'table11' && (i === 5 || i === 6)) || (tableId === 'table12' && i === 5)) {
-        cell.innerHTML = '<input type="date">';
-      } else {
-        cell.contentEditable = "true";
-      }
+    if (tableId === 'table11') {
+      row.innerHTML = `
+        <td contenteditable="true">${rowCount}.</td>
+        <td contenteditable="true"></td>
+        <td contenteditable="true"></td>
+        <td contenteditable="true"></td>
+        <td contenteditable="true"></td>
+        <td><input type="date" class="date-input"><span class="print-val"></span></td>
+        <td><input type="date" class="date-input"><span class="print-val"></span></td>
+        <td contenteditable="true"></td>
+      `;
+    } else {
+      row.innerHTML = `
+        <td contenteditable="true">${rowCount}.</td>
+        <td contenteditable="true"></td>
+        <td contenteditable="true"></td>
+        <td contenteditable="true"></td>
+        <td contenteditable="true"></td>
+        <td><input type="date" class="date-input"><span class="print-val"></span></td>
+        <td contenteditable="true"></td>
+      `;
     }
   }
 
   function clearForm() {
     if (confirm("क्या आप वाकई पूरे फॉर्म को खाली करना चाहते हैं?")) {
-      var fields = document.querySelectorAll('.fill-line, .editable-field');
-      for (var i = 0; i < fields.length; i++) {
-        fields[i].innerText = '';
-      }
+      document.querySelectorAll('.fill-line, .editable-field').forEach(function(el) {
+        el.innerText = '';
+      });
 
-      var selects = document.querySelectorAll('select');
-      for (var j = 0; j < selects.length; j++) {
-        selects[j].selectedIndex = 0;
-      }
+      document.querySelectorAll('select').forEach(function(sel) {
+        sel.selectedIndex = 0;
+      });
 
-      var dates = document.querySelectorAll('input[type="date"]');
-      for (var k = 0; k < dates.length; k++) {
-        dates[k].value = '';
-      }
+      document.querySelectorAll('input[type="date"]').forEach(function(dt) {
+        dt.value = '';
+      });
 
-      var tbody11 = document.getElementById('table11').getElementsByTagName('tbody')[0];
-      tbody11.innerHTML = '<tr><td contenteditable="true">1.</td><td contenteditable="true"></td><td contenteditable="true"></td><td contenteditable="true"></td><td contenteditable="true"></td><td><input type="date"></td><td><input type="date"></td><td contenteditable="true"></td></tr>';
+      document.getElementById('table11').getElementsByTagName('tbody')[0].innerHTML = `
+        <tr>
+          <td contenteditable="true">1.</td>
+          <td contenteditable="true"></td>
+          <td contenteditable="true"></td>
+          <td contenteditable="true"></td>
+          <td contenteditable="true"></td>
+          <td><input type="date" class="date-input"><span class="print-val"></span></td>
+          <td><input type="date" class="date-input"><span class="print-val"></span></td>
+          <td contenteditable="true"></td>
+        </tr>`;
 
-      var tbody12 = document.getElementById('table12').getElementsByTagName('tbody')[0];
-      tbody12.innerHTML = '<tr><td contenteditable="true">1.</td><td contenteditable="true"></td><td contenteditable="true"></td><td contenteditable="true"></td><td contenteditable="true"></td><td><input type="date"></td><td contenteditable="true"></td></tr>';
+      document.getElementById('table12').getElementsByTagName('tbody')[0].innerHTML = `
+        <tr>
+          <td contenteditable="true">1.</td>
+          <td contenteditable="true"></td>
+          <td contenteditable="true"></td>
+          <td contenteditable="true"></td>
+          <td contenteditable="true"></td>
+          <td><input type="date" class="date-input"><span class="print-val"></span></td>
+          <td contenteditable="true"></td>
+        </tr>`;
     }
   }
 </script>
