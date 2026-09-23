@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>स्थानांतरण प्रतिवेदन-2026</title>
+  <style>
+    @page {
+      size: A4 portrait;
+      margin: 12mm 15mm;
+    }
+
+    body {
+      font-family: "Arial Unicode MS", Arial, sans-serif;
+      font-size: 13px;
+      line-height: 1.4;
+      color: #000;
+      background-color: #fff;
+      margin: 0;
+      padding: 15px;
+    }
+
+    .form-container {
+      max-width: 820px;
+      margin: 0 auto;
+    }
+
+    /* Print / Control Buttons */
+    .controls {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .btn {
+      padding: 8px 16px;
+      font-size: 13px;
+      font-weight: bold;
+      background-color: #0066cc;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      margin: 0 4px;
+    }
+
+    .btn:hover {
+      background-color: #004d99;
+    }
+
+    .btn-secondary {
+      background-color: #28a745;
+    }
+
+    .btn-secondary:hover {
+      background-color: #1e7e34;
+    }
+
+    .btn-danger {
+      background-color: #dc3545;
+    }
+
+    .btn-danger:hover {
+      background-color: #bd2130;
+    }
+
+    .header-title {
+      text-align: center;
+      font-size: 21px;
+      font-weight: bold;
+      margin-bottom: 3px;
+    }
+
+    .header-subtitle {
+      text-align: center;
+      font-size: 12px;
+      margin-bottom: 8px;
+    }
+
+    .top-block {
+      text-align: right;
+      margin-bottom: 8px;
+    }
+
+    /* Fillable Editable Spans */
+    .editable-field {
+      display: inline-block;
+      min-width: 150px;
+      border-bottom: 1px dotted #000;
+      outline: none;
+      padding: 1px 4px;
+      color: #000;
+    }
+
+    .editable-field:focus {
+      background-color: #f7faff;
+      border-bottom: 1px solid #0066cc;
+    }
+
+    .fill-line {
+      flex: 1;
+      border-bottom: 1px dotted #000;
+      outline: none;
+      margin-left: 6px;
+      min-height: 1.2em;
+      padding: 0 4px;
+    }
+
+    .fill-line:focus {
+      background-color: #f7faff;
+      border-bottom: 1px solid #0066cc;
+    }
+
+    .field-row {
+      display: flex;
+      align-items: baseline;
+      margin-bottom: 6px;
+    }
+
+    .col-num {
+      width: 28px;
+      flex-shrink: 0;
+      text-align: right;
+      padding-right: 6px;
+    }
+
+    .col-label {
+      flex-shrink: 0;
+      white-space: nowrap;
+    }
+
+    .sub-note {
+      font-size: 11.5px;
+      margin-left: 35px;
+      margin-top: -3px;
+      margin-bottom: 5px;
+    }
+
+    .table-section-title {
+      font-weight: normal;
+      margin-top: 8px;
+      margin-bottom: 4px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 4px;
+    }
+
+    th, td {
+      border: 1px solid #000;
+      text-align: center;
+      padding: 5px 3px;
+      font-size: 12px;
+    }
+
+    th {
+      font-weight: normal;
+    }
+
+    td[contenteditable="true"] {
+      outline: none;
+      min-height: 24px;
+    }
+
+    td[contenteditable="true"]:focus {
+      background-color: #f0f7ff;
+    }
+
+    .note-section {
+      font-weight: bold;
+      font-size: 12.5px;
+      margin-top: 10px;
+      line-height: 1.4;
+    }
+
+    .declaration {
+      margin-top: 14px;
+      text-align: justify;
+      line-height: 1.5;
+    }
+
+    .dispatch-info {
+      display: flex;
+      justify-content: flex-end;
+      gap: 30px;
+      margin-top: 18px;
+      font-size: 13px;
+    }
+
+    .signature-area {
+      margin-top: 40px;
+      text-align: right;
+      font-weight: bold;
+      line-height: 1.5;
+      padding-right: 15px;
+    }
+
+    @media print {
+      .controls {
+        display: none !important;
+      }
+      body {
+        padding: 0;
+      }
+      .fill-line:empty::before,
+      .editable-field:empty::before {
+        content: "\00a0";
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="controls">
+  <button class="btn btn-secondary" onclick="addRow('table11', 8)">+ पूर्व पदस्थापन पंक्ति जोड़ें</button>
+  <button class="btn btn-secondary" onclick="addRow('table12', 7)">+ पदस्थापन विद्यालय पंक्ति जोड़ें</button>
+  <button class="btn btn-danger" onclick="clearForm()">🗑️ फॉर्म खाली करें (Clear)</button>
+  <button class="btn" onclick="window.print()">🖨️ फॉर्म प्रिंट करें / PDF सेव करें</button>
+</div>
+
+<div class="form-container">
+  <div class="header-title">स्थानांतरण प्रतिवेदन&mdash;2026</div>
+  <div class="header-subtitle">(जिस विद्यालय में शिक्षक योगदान किए है, वहाँ के प्रधान शिक्षक / प्रधानाध्यापक द्वारा समर्पित किया जाना है)</div>
+
+  <div class="top-block">
+    नवपदस्थापित प्रखंड&mdash;<span class="editable-field" style="width: 200px;" contenteditable="true"></span>
+  </div>
+
+  <!-- Fields 1 to 10 -->
+  <div class="field-row">
+    <div class="col-num">1.</div>
+    <div class="col-label">शिक्षक का नाम :&mdash;</div>
+    <div class="fill-line" contenteditable="true"></div>
+  </div>
+
+  <div class="field-row">
+    <div class="col-num">2.</div>
+    <div class="col-label">वर्ग / विषय :&mdash;</div>
+    <div class="fill-line" contenteditable="true"></div>
+  </div>
+
+  <div class="field-row">
+    <div class="col-num">3.</div>
+    <div class="col-label">शिक्षक का कोटि :&mdash;</div>
+    <div class="fill-line" contenteditable="true"></div>
+  </div>
+  <div class="sub-note">(नियमित कोटि के शिक्षक / विशिष्ट शिक्षक (सक्षमता&mdash;1,2,3,4) / विद्यालय अध्यापक&mdash;(TRE&mdash;1,2,3)</div>
+
+  <div class="field-row">
+    <div class="col-num">4.</div>
+    <div class="col-label">स्थानांतरण का प्रकार :&mdash;</div>
+    <div class="fill-line" contenteditable="true"></div>
+  </div>
+  <div class="sub-note">(समायोजन / समानुपातिकरण एवं पारस्परिक)</div>
+
+  <div class="field-row">
+    <div class="col-num">5.</div>
+    <div class="col-label">स्थानांतरण / पदस्थापन आदेश का पत्रांक / दिनांक :&mdash;</div>
+    <div class="fill-line" contenteditable="true"></div>
+  </div>
+
+  <div class="field-row">
+    <div class="col-num">6.</div>
+    <div class="col-label">कार्यालय का नाम :&mdash;</div>
+    <div class="fill-line" contenteditable="true"></div>
+  </div>
+
+  <div class="field-row">
+    <div class="col-num">7.</div>
+    <div class="col-label">ई&mdash;शिक्षाकोष आई०डी० सं० :&mdash;</div>
+    <div class="fill-line" contenteditable="true"></div>
+  </div>
+
+  <div class="field-row">
+    <div class="col-num">8.</div>
+    <div class="col-label">GPF / PRAN No :&mdash;</div>
+    <div class="fill-line" contenteditable="true"></div>
+  </div>
+
+  <div class="field-row">
+    <div class="col-num">9.</div>
+    <div class="col-label">क्र.सं.&mdash;3 में अंकित उपरोक्त शिक्षक के प्रथम योगदान तिथि :&mdash;</div>
+    <div class="fill-line" contenteditable="true"></div>
+  </div>
+
+  <div class="field-row">
+    <div class="col-num">10.</div>
+    <div class="col-label">विशिष्ट शिक्षक का स्थानीय निकाय के पद पर प्रथम योगदान तिथि :&mdash;</div>
+    <div class="fill-line" contenteditable="true"></div>
+  </div>
+  <div class="sub-note">(अगर लागू हो तो)</div>
+
+  <!-- Table 11 -->
+  <div class="table-section-title">
+    <strong>11.</strong> &nbsp;पूर्व पदस्थापन विद्यालय का विवरण :&mdash;
+  </div>
+  <table id="table11">
+    <thead>
+      <tr>
+        <th style="width: 7%;">क्र.सं.</th>
+        <th style="width: 14%;">जिला</th>
+        <th style="width: 13%;">प्रखंड</th>
+        <th style="width: 15%;">यू&mdash;डायस कोड</th>
+        <th style="width: 25%;">विद्यालय का नाम</th>
+        <th style="width: 9%;">कब से</th>
+        <th style="width: 9%;">कब तक</th>
+        <th style="width: 8%;">अभ्युक्ति</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td contenteditable="true">1.</td>
+        <td contenteditable="true"></td>
+        <td contenteditable="true"></td>
+        <td contenteditable="true"></td>
+        <td contenteditable="true"></td>
+        <td contenteditable="true"></td>
+        <td contenteditable="true"></td>
+        <td contenteditable="true"></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- Table 12 -->
+  <div class="table-section-title">
+    <strong>12.</strong> &nbsp;<strong>पदस्थापन विद्यालय जिसमें स्थानांतरण के उपरांत योगदान किया है, का विवरण :&mdash;</strong>
+  </div>
+  <table id="table12">
+    <thead>
+      <tr>
+        <th style="width: 7%;">क्र.सं.</th>
+        <th style="width: 14%;">जिला</th>
+        <th style="width: 13%;">प्रखंड</th>
+        <th style="width: 15%;">यू&mdash;डायस कोड</th>
+        <th style="width: 26%;">विद्यालय का नाम</th>
+        <th style="width: 15%;">योगदान तिथि</th>
+        <th style="width: 10%;">अभ्युक्ति</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td contenteditable="true">1.</td>
+        <td contenteditable="true"></td>
+        <td contenteditable="true"></td>
+        <td contenteditable="true"></td>
+        <td contenteditable="true"></td>
+        <td contenteditable="true"></td>
+        <td contenteditable="true"></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- Fields 13 & 14 -->
+  <div class="field-row">
+    <div class="col-num">13.</div>
+    <div class="col-label">अंतिम वेतन किस माह तक प्राप्त है :&mdash;</div>
+    <div class="fill-line" contenteditable="true"></div>
+  </div>
+
+  <div class="field-row">
+    <div class="col-num">14.</div>
+    <div class="col-label">दूरभाष सं० :&mdash;</div>
+    <div class="fill-line" style="flex: 0 0 350px;" contenteditable="true"></div>
+  </div>
+
+  <!-- Note -->
+  <div class="note-section">
+    नोट :&mdash; प्रपत्र के साथ स्थानांतरण / पदस्थापन आदेश एवं योगदान पत्र की सत्यापित छायाप्रति अनिवार्य रूप से संलग्न करेंगे। अन्य कोई अभिलेख जिला कार्यालय को जमा नहीं करेंगे।
+  </div>
+
+  <!-- Verification text -->
+  <div class="declaration">
+    प्रमाणित किया जाता है विधिवत रूप से नियुक्त शिक्षक का स्थानांतरण आदेश की प्रमाणिकता का सत्यापन E_shikshakosh Portal पर किए जाने के उपरांत योगदान कराया गया है एवं E_shikshakosh Portal पर इसकी प्रविष्टि भी करा दी गई है।
+  </div>
+
+  <!-- Dispatch & Signature -->
+  <div class="dispatch-info">
+    <div>पत्रांक <span class="editable-field" style="width: 120px;" contenteditable="true"></span></div>
+    <div>दिनांक <span class="editable-field" style="width: 120px;" contenteditable="true"></span></div>
+  </div>
+
+  <div class="signature-area">
+    प्र०शि० / प्र०अ० का हस्ताक्षर<br>
+    एवं मुहर
+  </div>
+</div>
+
+<script>
+  function addRow(tableId, cols) {
+    const tbody = document.getElementById(tableId).getElementsByTagName('tbody')[0];
+    const rowCount = tbody.rows.length + 1;
+    const row = tbody.insertRow();
+    
+    const cell1 = row.insertCell(0);
+    cell1.contentEditable = "true";
+    cell1.innerText = rowCount + ".";
+
+    for (let i = 1; i < cols; i++) {
+      const cell = row.insertCell(i);
+      cell.contentEditable = "true";
+    }
+  }
+
+  function clearForm() {
+    if (confirm("क्या आप वाकई पूरे फॉर्म को साफ़ (Clear) करना चाहते हैं?")) {
+      // Clear inline editable fields
+      document.querySelectorAll('.fill-line, .editable-field').forEach(el => {
+        el.innerText = '';
+      });
+
+      // Reset Table 11
+      const tbody11 = document.getElementById('table11').getElementsByTagName('tbody')[0];
+      tbody11.innerHTML = `
+        <tr>
+          <td contenteditable="true">1.</td>
+          <td contenteditable="true"></td>
+          <td contenteditable="true"></td>
+          <td contenteditable="true"></td>
+          <td contenteditable="true"></td>
+          <td contenteditable="true"></td>
+          <td contenteditable="true"></td>
+          <td contenteditable="true"></td>
+        </tr>`;
+
+      // Reset Table 12
+      const tbody12 = document.getElementById('table12').getElementsByTagName('tbody')[0];
+      tbody12.innerHTML = `
+        <tr>
+          <td contenteditable="true">1.</td>
+          <td contenteditable="true"></td>
+          <td contenteditable="true"></td>
+          <td contenteditable="true"></td>
+          <td contenteditable="true"></td>
+          <td contenteditable="true"></td>
+          <td contenteditable="true"></td>
+        </tr>`;
+    }
+  }
+</script>
+
+</body>
+</html>
+
