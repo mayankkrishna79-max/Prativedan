@@ -362,7 +362,7 @@
   <div class="field-row">
     <div class="col-num">3.</div>
     <div class="col-label">शिक्षक का कोटि :&mdash;</div>
-    <select class="fill-line" style="cursor: pointer;">
+    <select class="fill-line">
       <option value="">-- चयन करें --</option>
       <option value="नियमित कोटि के शिक्षक">नियमित कोटि के शिक्षक</option>
       <option value="विशिष्ट शिक्षक (सक्षमता-1)">विशिष्ट शिक्षक (सक्षमता-1)</option>
@@ -380,7 +380,7 @@
   <div class="field-row">
     <div class="col-num">4.</div>
     <div class="col-label">स्थानांतरण का प्रकार :&mdash;</div>
-    <select class="fill-line" style="cursor: pointer;">
+    <select class="fill-line">
       <option value="">-- चयन करें --</option>
       <option value="समायोजन">समायोजन</option>
       <option value="समानुपातिकरण">समानुपातिकरण</option>
@@ -495,7 +495,7 @@
   <div class="field-row">
     <div class="col-num">13.</div>
     <div class="col-label">अंतिम वेतन किस माह तक प्राप्त है :&mdash;</div>
-    <select class="fill-line" style="cursor: pointer;">
+    <select class="fill-line">
       <option value="">-- माह चुनें --</option>
       <option value="जनवरी 2026">जनवरी 2026</option>
       <option value="फरवरी 2026">फरवरी 2026</option>
@@ -526,7 +526,7 @@
     प्रमाणित किया जाता है विधिवत रूप से नियुक्त शिक्षक का स्थानांतरण आदेश की प्रमाणिकता का सत्यापन E_shikshakosh Portal पर किए जाने के उपरांत योगदान कराया गया है एवं E_shikshakosh Portal पर इसकी प्रविष्टि भी करा दी गई है।
   </div>
 
-  <!-- Dispatch Info (Date ke sath calendar) -->
+  <!-- Dispatch Info -->
   <div class="dispatch-info">
     <div>पत्रांक <span class="editable-field" style="width: 120px;" contenteditable="true"></span></div>
     <div>दिनांक <input type="date" style="width: 130px;"></div>
@@ -539,16 +539,28 @@
 </div>
 
 <script>
+  // Page load hote hi check karega ki kya user pehle hi join kar chuka hai
+  document.addEventListener("DOMContentLoaded", function() {
+    if (localStorage.getItem("wa_channel_joined") === "true") {
+      var overlay = document.getElementById("waOverlay");
+      if (overlay) {
+        overlay.style.display = "none";
+      }
+    }
+  });
+
   function enableUnlock() {
     setTimeout(function() {
       var unlockBtn = document.getElementById('unlockBtn');
       unlockBtn.disabled = false;
       unlockBtn.classList.add('active');
       unlockBtn.innerText = 'चैनल जॉइन कर लिया है (फॉर्म खोलें)';
-    }, 2500);
+    }, 2000);
   }
 
   function accessForm() {
+    // LocalStorage me save kar diya - ab is device par dobara popup nahi aayega
+    localStorage.setItem("wa_channel_joined", "true");
     document.getElementById('waOverlay').style.display = 'none';
   }
 
@@ -563,7 +575,6 @@
 
     for (var i = 1; i < cols; i++) {
       var cell = row.insertCell(i);
-      // Agar Table 11 me Date column ho (index 5 aur 6) ya Table 12 me (index 5)
       if ((tableId === 'table11' && (i === 5 || i === 6)) || (tableId === 'table12' && i === 5)) {
         cell.innerHTML = '<input type="date">';
       } else {
@@ -574,29 +585,24 @@
 
   function clearForm() {
     if (confirm("क्या आप वाकई पूरे फॉर्म को खाली करना चाहते हैं?")) {
-      // Clear contenteditable fields
       var fields = document.querySelectorAll('.fill-line, .editable-field');
       for (var i = 0; i < fields.length; i++) {
         fields[i].innerText = '';
       }
 
-      // Reset selects
       var selects = document.querySelectorAll('select');
       for (var j = 0; j < selects.length; j++) {
         selects[j].selectedIndex = 0;
       }
 
-      // Reset date inputs
       var dates = document.querySelectorAll('input[type="date"]');
       for (var k = 0; k < dates.length; k++) {
         dates[k].value = '';
       }
 
-      // Reset Table 11
       var tbody11 = document.getElementById('table11').getElementsByTagName('tbody')[0];
       tbody11.innerHTML = '<tr><td contenteditable="true">1.</td><td contenteditable="true"></td><td contenteditable="true"></td><td contenteditable="true"></td><td contenteditable="true"></td><td><input type="date"></td><td><input type="date"></td><td contenteditable="true"></td></tr>';
 
-      // Reset Table 12
       var tbody12 = document.getElementById('table12').getElementsByTagName('tbody')[0];
       tbody12.innerHTML = '<tr><td contenteditable="true">1.</td><td contenteditable="true"></td><td contenteditable="true"></td><td contenteditable="true"></td><td contenteditable="true"></td><td><input type="date"></td><td contenteditable="true"></td></tr>';
     }
@@ -605,4 +611,3 @@
 
 </body>
 </html>
-
